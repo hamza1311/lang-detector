@@ -45,6 +45,64 @@ var _ = require('underscore');
  *  and one has a higher precedence over the other one.
  */
 var languages = {
+	'Kotlin': [
+		// val/var declarations
+		{ pattern: /(val|var)( )+\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
+		// Function definition
+		{ pattern: /fun( )+\w+\(.*\)( )*:( )*[\w<>]+/, points: 2 },
+		// Class definition
+		{ pattern: /(data )?class( )+\w+/, points: 2 },
+		// Null safety
+		{ pattern: /\?.+/, points: 2 },
+		// Companion object
+		{ pattern: /companion( )+object/, points: 2 },
+	],
+
+	'Rust': [
+		// Function definition
+		{ pattern: /fn( )+\w+\(.*\)( )*->( )*[\w<>]+/, points: 2 },
+		// let declarations
+		{ pattern: /let( )+(mut)?( )*\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
+		// Struct definition
+		{ pattern: /struct( )+\w+/, points: 2 },
+		// Enum definition
+		{ pattern: /enum( )+\w+/, points: 2 },
+		// Match expression
+		{ pattern: /match( )+\w+( )*{/, points: 2 },
+	],
+
+	'JSON': [
+		// Object
+		{ pattern: /{[^{}]*}/, points: 2 },
+		// Array
+		{ pattern: /\[[^\[\]]*\]/, points: 2 },
+		// Key-value pair
+		{ pattern: /"[^"]*":( )*.+/, points: 2 },
+		// null, true, false
+		{ pattern: /(null|true|false)/, points: 2 },
+	],
+	'SQL': [
+		// SELECT statement
+		{ pattern: /SELECT .+ FROM .+/, points: 2 },
+		// INSERT statement
+		{ pattern: /INSERT INTO .+ VALUES .+/, points: 2 },
+		// UPDATE statement
+		{ pattern: /UPDATE .+ SET .+ WHERE .+/, points: 2 },
+		// DELETE statement
+		{ pattern: /DELETE FROM .+ WHERE .+/, points: 2 },
+		// CREATE TABLE statement
+		{ pattern: /CREATE TABLE .+/, points: 2 },
+	],
+	'YAML': [
+		// Key-value pair
+		{ pattern: /\w+:( )*.+/, points: 2 },
+		// Array
+		{ pattern: /-\s+.+/, points: 2 },
+		// Multiline string
+		{ pattern: /\|[\n\r]( )+.+/, points: 2 },
+		// Inline dictionary
+		{ pattern: /{[^{}]*}/, points: 2 },
+	],
 	'JavaScript': [
 		// undefined keyword
 		{ pattern: /undefined/g, points: 2 },
