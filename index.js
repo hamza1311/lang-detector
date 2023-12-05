@@ -22,17 +22,15 @@
  *	THE SOFTWARE.
  */
 
-var _ = require('underscore');
-
 /**
  * A checker is an object with the following form:
  *  { pattern: /something/, points: 1 }
  * or if the pattern only matches code near the top of a given file:
  *  { pattern: /something/, points: 2, nearTop: true }
- * 
+ *
  * Key: Language name.
  * Value: Array of checkers.
- * 
+ *
  * N.B. An array of checkers shouldn't contain more regexes than
  * necessary as it would inhibit performance.
  *
@@ -44,17 +42,18 @@ var _ = require('underscore');
  * -50 = Bonus penalty points: Only used when two languages are mixed together,
  *  and one has a higher precedence over the other one.
  */
-var languages = {
+
+const languages = {
 	'Kotlin': [
-		// val/var declarations
+        // val/var declarations
 		{ pattern: /(val|var)( )+\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
-		// Function definition
+        // Function definition
 		{ pattern: /fun( )+\w+\(.*\)( )*:( )*[\w<>]+/, points: 2 },
-		// Class definition
+        // Class definition
 		{ pattern: /(data )?class( )+\w+/, points: 2 },
-		// Null safety
+        // Null safety
 		{ pattern: /\?.+/, points: 2 },
-		// Companion object
+        // Companion object
 		{ pattern: /companion( )+object/, points: 2 },
 	],
 
@@ -384,36 +383,31 @@ var languages = {
 };
 
 function getPoints(language, lineOfCode, checkers) {
-	return _.reduce(_.map(checkers, function(checker) {
+	return checkers.reduce((memo, checker) => {
 		if (checker.pattern.test(lineOfCode)) {
-			return checker.points;
+			return memo + checker.points;
 		}
-		return 0;
-	}), function(memo, num) {
-		return memo + num;
+		return memo;
 	}, 0);
 }
 
-function detectLang(snippet, options) {
-	var opts = _.defaults(options || {}, {
-		heuristic: true,
-		statistics: false,
-	});
+function detectLang(snippet, options = {}) {
+	const { heuristic = true, statistics = false } = options;
 
-	var linesOfCode = snippet
+	let linesOfCode = snippet
 		.replace(/\r\n?/g, '\n')
 		.replace(/\n{2,}/g, '\n')
 		.split('\n');
 
-	function nearTop(index) {
+	const nearTop = (index) => {
 		if (linesOfCode.length <= 10) {
 			return true;
 		}
 		return index < linesOfCode.length / 10;
-	}
+	};
 
-	if (opts.heuristic && linesOfCode.length > 500) {
-		linesOfCode = linesOfCode.filter(function(lineOfCode, index) {
+	if (heuristic && linesOfCode.length > 500) {
+		linesOfCode = linesOfCode.filter((lineOfCode, index) => {
 			if (nearTop(index)) {
 				return true;
 			}
@@ -421,49 +415,41 @@ function detectLang(snippet, options) {
 		});
 	}
 
-	var pairs = _.keys(languages).map(function(key) {
+	const pairs = Object.keys(languages).map((key) => {
 		return { language: key, checkers: languages[key] };
 	});
 
-	var results = _.map(pairs, function(pairs) {
-		var language = pairs.language;
-		var checkers = pairs.checkers;
+	const results = pairs.map((pair) => {
+		const { language, checkers } = pair;
 
 		if (language === 'Unknown') {
 			return { language: 'Unknown', points: 1 };
 		}
 
-		var pointsList = linesOfCode.map(function(lineOfCode, index) {
+		const pointsList = linesOfCode.map((lineOfCode, index) => {
 			if (!nearTop(index)) {
-				return getPoints(language, lineOfCode, _.reject(checkers, function(checker) {
-					return checker.nearTop;
-				}));
+				return getPoints(
+					language,
+					lineOfCode,
+					checkers.filter((checker) => !checker.nearTop)
+				);
 			} else {
 				return getPoints(language, lineOfCode, checkers);
 			}
 		});
 
-		var points = _.reduce(pointsList, function(memo, num) {
-			return memo + num;
-		});
+		const points = pointsList.reduce((memo, num) => memo + num, 0);
 
-		return { language: language, points: points };
+		return { language, points };
 	});
 
-	var bestResult = _.max(results, function(result) {
-		return result.points;
+	const bestResult = results.reduce((best, result) => (result.points > best.points ? result : best), {
+		points: -Infinity,
 	});
 
-	if (opts.statistics) {
-		var statistics = {};
-		for (var result in results) {
-			statistics.push([ results[result].language , results[result].points]);
-		}
-
-		statistics.sort(function (a, b) {
-			return b[1] - a[1];
-		});
-		return { detected: bestResult.language, statistics: statistics };
+	if (statistics) {
+		const stats = results.map((result) => [result.language, result.points]).sort((a, b) => b[1] - a[1]);
+		return { detected: bestResult.language, statistics: stats };
 	}
 
 	return bestResult.language;
