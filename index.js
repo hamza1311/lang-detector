@@ -101,13 +101,13 @@ const languages = {
 	],
 	'YAML': [
 		// Key-value pair
-		{ pattern: /\w+:( )*.+/, points: 2 },
+		{ pattern: /\w+:( )*.+/, points: 1 },
 		// Array
-		{ pattern: /-\s+.+/, points: 2 },
+		{ pattern: /-\s+.+/, points: 1 },
 		// Multiline string
-		{ pattern: /\|[\n\r]( )+.+/, points: 2 },
+		{ pattern: /\|[\n\r]( )+.+/, points: 1 },
 		// Inline dictionary
-		{ pattern: /{[^{}]*}/, points: 2 },
+		{ pattern: /{[^{}]*}/, points: 1 },
 	],
 	'JavaScript': [
 		// undefined keyword
