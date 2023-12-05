@@ -45,13 +45,13 @@
 
 const languages = {
 	'Kotlin': [
-        // Function definition
+		// Function definition
 		{ pattern: /fun( )+\w+\(.*\)( )*/, points: 2 },
-        // Class definition
+		// Class definition
 		{ pattern: /(data )?class( )+\w+/, points: 2 },
-        // Null safety
+		// Null safety
 		{ pattern: /\?.+/, points: 1 },
-        // Companion object
+		// Companion object
 		{ pattern: /companion( )+object/, points: 3 },
 		// when
 		{ pattern: /when( )+\(.+\)( )*{/, points: 3 },
@@ -73,6 +73,15 @@ const languages = {
 		{ pattern: /match( )+\w+( )*{/, points: 2 },
 		// prints
 		{ pattern: /(eprint(ln)?|print(ln)?|panic)!/, points: 3 },
+		// mod
+		{ pattern: /mod( )+\w+/, points: 3 },
+		// (else )if statement
+		{ pattern: /(else )?if( )*\(.+\)/, points: 1 },
+		// while loop
+		{ pattern: /while( )+\(.+\)/, points: 1 },
+		// Scope operator
+		{ pattern: /\w*::\w+/, points: 1 },
+
 	],
 
 	'JSON': [
@@ -98,16 +107,6 @@ const languages = {
 		{ pattern: /DELETE FROM .+ WHERE .+/, points: 2 },
 		// CREATE TABLE statement
 		{ pattern: /CREATE TABLE .+/, points: 2 },
-	],
-	'YAML': [
-		// Key-value pair
-		{ pattern: /\w+:( )*.+/, points: 1 },
-		// Array
-		{ pattern: /-\s+.+/, points: 1 },
-		// Multiline string
-		{ pattern: /\|[\n\r]( )+.+/, points: 1 },
-		// Inline dictionary
-		{ pattern: /{[^{}]*}/, points: 1 },
 	],
 	'JavaScript': [
 		// undefined keyword
@@ -184,8 +183,6 @@ const languages = {
 		{ pattern: /using( )+namespace( )+.+( )*;/, points: 2 },
 		// template declaration
 		{ pattern: /template( )*<.*>/, points: 2 },
-		// std
-		{ pattern: /std::\w+/g, points: 2 },
 		// cout/cin/endl
 		{ pattern: /(cout|cin|endl)/g, points: 2 },
 		// Visibility specifiers
@@ -298,9 +295,9 @@ const languages = {
 		// CSS property declaration
 		{ pattern: /[a-z\-]+:(?!:).+\;/, points: 1 },
 		// CSS class or id selector
-		{ pattern: /(\.|#)[a-z\-_]+\s*{[^}]*}/, points: 2 },
+		{ pattern: /(\.|#)[a-z\-_]+\s*{[^}]*}/, points: 1 },
 		// CSS pseudo-class or pseudo-element
-		{ pattern: /:[a-z\-_]+/, points: 2 },
+		{ pattern: /:[a-z\-_]+/, points: 1 },
 		// CSS @media or @keyframes rule
 		{ pattern: /@(media|keyframes)(\s|\n)[^{]*\{([^}]|\n)*\}/, points: 2 },
 		// <style> tag from HTML
