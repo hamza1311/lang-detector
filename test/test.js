@@ -1,6 +1,6 @@
-var fs = require('fs');
-var assert = require('assert');
-var detectLang = require('../index');
+const fs = require('fs');
+const assert = require('assert');
+const detectLang = require('../index');
 
 describe('fizzbuzz', function() {
 

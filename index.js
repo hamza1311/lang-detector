@@ -45,40 +45,47 @@
 
 const languages = {
 	'Kotlin': [
-        // val/var declarations
-		{ pattern: /(val|var)( )+\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
         // Function definition
-		{ pattern: /fun( )+\w+\(.*\)( )*:( )*[\w<>]+/, points: 2 },
+		{ pattern: /fun( )+\w+\(.*\)( )*/, points: 2 },
         // Class definition
 		{ pattern: /(data )?class( )+\w+/, points: 2 },
         // Null safety
-		{ pattern: /\?.+/, points: 2 },
+		{ pattern: /\?.+/, points: 1 },
         // Companion object
-		{ pattern: /companion( )+object/, points: 2 },
+		{ pattern: /companion( )+object/, points: 3 },
+		// when
+		{ pattern: /when( )+\(.+\)( )*{/, points: 3 },
+		// val/var declarations
+		{ pattern: /(val)( )+\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
+		{ pattern: /(var)( )+\w+( )*:( )*[\w<>]+( )*=?/, points: 1 },
 	],
 
 	'Rust': [
 		// Function definition
 		{ pattern: /fn( )+\w+\(.*\)( )*->( )*[\w<>]+/, points: 2 },
 		// let declarations
-		{ pattern: /let( )+(mut)?( )*\w+( )*:( )*[\w<>]+( )*=?/, points: 2 },
+		{ pattern: /let( )+(mut)?( )*\w+( )*:( )*[\w<>]+( )*=?/, points: 1 },
 		// Struct definition
 		{ pattern: /struct( )+\w+/, points: 2 },
 		// Enum definition
 		{ pattern: /enum( )+\w+/, points: 2 },
 		// Match expression
 		{ pattern: /match( )+\w+( )*{/, points: 2 },
+		// prints
+		{ pattern: /(eprint(ln)?|print(ln)?|panic)!/, points: 3 },
 	],
 
 	'JSON': [
 		// Object
-		{ pattern: /{[^{}]*}/, points: 2 },
+		{ pattern: /{[^{}]*}/, points: 1 },
 		// Array
-		{ pattern: /\[[^\[\]]*\]/, points: 2 },
+		{ pattern: /\[[^\[\]]*\]/, points: 1 },
 		// Key-value pair
-		{ pattern: /"[^"]*":( )*.+/, points: 2 },
+		{ pattern: /"[^"]*":( )*.+/, points: 1 },
 		// null, true, false
-		{ pattern: /(null|true|false)/, points: 2 },
+		{ pattern: /(null|true|false)/, points: 1 },
+		// Variable declaration
+		{ pattern: /(var|const|let)( )+\w+( )*=?/, points: -2 },
 	],
 	'SQL': [
 		// SELECT statement
@@ -108,7 +115,7 @@ const languages = {
 		// console.log('ayy lmao')
 		{ pattern: /console\.log( )*\(/, points: 2 },
 		// Variable declaration
-		{ pattern: /(var|const|let)( )+\w+( )*=?/, points: 2 },
+		{ pattern: /(var|const|let)( )+\w+( )*=?/, points: 1 },
 		// Array/Object declaration
 		{ pattern: /(('|").+('|")( )*|\w+):( )*[{\[]/, points: 2 },
 		// === operator
@@ -288,12 +295,17 @@ const languages = {
 	],
 
 	'CSS': [
-		// Properties
-		{ pattern: /[a-z\-]+:(?!:).+;/, points: 2 },
+		// CSS property declaration
+		{ pattern: /[a-z\-]+:(?!:).+\;/, points: 1 },
+		// CSS class or id selector
+		{ pattern: /(\.|#)[a-z\-_]+\s*{[^}]*}/, points: 2 },
+		// CSS pseudo-class or pseudo-element
+		{ pattern: /:[a-z\-_]+/, points: 2 },
+		// CSS @media or @keyframes rule
+		{ pattern: /@(media|keyframes)(\s|\n)[^{]*\{([^}]|\n)*\}/, points: 2 },
 		// <style> tag from HTML
 		{ pattern: /<(\/)?style>/, points: -50 },
 	],
-
 	'Ruby': [
 		// require/include
 		{ pattern: /(require|include)( )+'\w+(\.rb)?'/, points: 2, nearTop: true },
