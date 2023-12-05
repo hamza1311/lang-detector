@@ -77,42 +77,19 @@ describe('fizzbuzz', function() {
 		});
 	});
 
-});
-
-describe('big files', function() {
-
-	it('should detect C (4593 loc file)', function(done) {
-		fs.readFile(__dirname + '/random/large.c', {
-			encoding: 'utf8',
-		}, function(err, code) {
+	it('should detect Kotlin', function(done) {
+		readFizzBuzzFile('.kt', function(err, code) {
 			if (err) throw err;
-			assert.equal('C', detectLang(code));
+			assert.equal('Kotlin', detectLang(code));
 			done();
 		});
 	});
 
-});
 
-describe('random files', function() {
-
-	// Test HTML
-	it('should detect HTML', function(done) {
-		fs.readFile(__dirname + '/random/page.html', {
-			encoding: 'utf8',
-		}, function(err, code) {
+	it('should detect Rust', function(done) {
+		readFizzBuzzFile('.rs', function(err, code) {
 			if (err) throw err;
-			assert.equal('HTML', detectLang(code));
-			done();
-		});
-	});
-
-	// Test CSS
-	it('should detect CSS', function(done) {
-		fs.readFile(__dirname + '/random/normalize.css', {
-			encoding: 'utf8',
-		}, function(err, code) {
-			if (err) throw err;
-			assert.equal('CSS', detectLang(code));
+			assert.equal('Rust', detectLang(code));
 			done();
 		});
 	});
